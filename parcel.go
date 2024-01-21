@@ -17,14 +17,13 @@ func (s ParcelStore) Add(p Parcel) (int, error) {
 
 	// реализуйте добавление строки в таблицу parcel, используйте данные из переменной p
 	// название продукта и цена передаются через параметры
-	res, err := db.Exec("INSERT INTO parcel (number, client, status, address, created_at) VALUES (:number, :client, :status, :address, :created_at)",
-		sql.Named("number", p.Number),
+	res, err := db.Exec("INSERT INTO parcel (client, status, address, created_at) VALUES (:client, :status, :address, :created_at)",
 		sql.Named("client", p.Client),
 		sql.Named("status", p.Status),
 		sql.Named("address", p.Address),
 		sql.Named("created_at", p.CreatedAt))
 	if err != nil {
-		fmt.Println(err)
+		return 0, fmt.Errorf("db.Exec: %w", err)
 		return
 	}
 	id := int(res.LastInsertId())
