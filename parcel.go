@@ -24,7 +24,6 @@ func (s ParcelStore) Add(p Parcel) (int, error) {
 		sql.Named("created_at", p.CreatedAt))
 	if err != nil {
 		return 0, fmt.Errorf("db.Exec: %w", err)
-		return
 	}
 	id := int(res.LastInsertId())
 	// верните идентификатор последней добавленной записи
@@ -66,7 +65,9 @@ func (s ParcelStore) GetByClient(client int) ([]Parcel, error) {
 
 		res = append(res, p)
 	}
-	rows.Err()
+	if err := rows.Err(); err != nil {
+		return nil, fmt.Errorf("rows.Err: %w", err)
+	}
 	return res, nil
 }
 
